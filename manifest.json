@@ -1,0 +1,16 @@
+{
+  "name": "Cipher — Private messages",
+  "short_name": "Cipher",
+  "description": "Encrypt messages on this device and share them by SMS or QR code.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23000000'/><rect x='24' y='24' width='144' height='144' fill='%23000000' stroke='%23ffffff' stroke-width='12'/><text x='96' y='116' font-family='monospace' font-weight='bold' font-size='64' fill='%23ffffff' text-anchor='middle'>%23</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

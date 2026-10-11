@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cipher — Private messages</title>
+  <meta name="description" content="Encrypt messages on your device and share them by SMS or QR code.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#090909">
+</head>
+<body>
+
+  <div class="modern-chat-app">
+    
+    <!-- =======================================================================
+         LEFT SIDEBAR: CHATS LIST & PROFILE
+         ======================================================================= -->
+    <aside class="sidebar" id="sidebar">
+      
+      <!-- Top Profile & Actions Header -->
+      <header class="sidebar-header">
+        <div class="user-profile-badge" id="btn-user-profile" title="My Account & Security Vault">
+          <div class="avatar-halo" id="my-avatar">
+            <span>ME</span>
+            <span class="halo-online"></span>
+          </div>
+          <div class="user-info-meta">
+            <span class="user-name" id="my-name-display">Cipher</span>
+            <span class="user-phone-status">
+              <span id="my-phone-display">Local vault</span>
+              <span class="shield-pill-mini">LOCAL</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="sidebar-action-icons">
+          <button class="icon-btn-modern" id="btn-toggle-theme" title="Toggle Light/Dark Mode">
+            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <button class="icon-btn-modern" id="btn-toggle-audio" title="Toggle Audio FX">
+            <svg id="audio-icon-svg" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+          <button class="icon-btn-modern" id="btn-new-chat-top" title="New Encrypted Chat">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="12" y1="8" x2="12" y2="14"></line><line x1="9" y1="11" x2="15" y2="11"></line></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Search Dock -->
+      <div class="sidebar-search-dock">
+        <div class="search-input-wrapper">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input 
+            type="text" 
+            class="modern-search-input" 
+            id="search-input" 
+            placeholder="Search contacts"
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <!-- Contacts List -->
+      <nav class="contacts-scroll-area" id="chats-list" aria-label="Encrypted Conversations">
+        <!-- Rendered dynamically -->
+      </nav>
+
+      <!-- Floating Action Button (+) -->
+      <button class="fab-new-modern" id="fab-new-chat" title="New Chat with Phone Number">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+    </aside>
+
+    <!-- =======================================================================
+         RIGHT CONVERSATION PANE
+         ======================================================================= -->
+    <section class="conversation-pane" id="conversation-pane">
+      
+      <!-- Top Active Chat Header -->
+      <header class="conversation-header">
+      <div class="active-contact-profile-card" id="header-contact-info" title="View shared-secret verification code">
+          <button class="btn-back-mobile" id="btn-mobile-back" title="Back to Chats">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <div class="avatar-halo" id="active-chat-avatar">SC</div>
+          <div class="active-contact-text-wrap">
+            <span class="active-contact-title" id="active-chat-name">Sarah Connor</span>
+            <span class="active-contact-subline">
+              <span id="active-chat-phone">+1 (555) 019-2834</span>
+              <span>•</span>
+              <span class="e2ee-quantum-tag">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>KEY READY · MANUAL DELIVERY</span>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="conversation-header-actions">
+          <button class="btn-pill-modern btn-pill-highlight" id="btn-p2p-connect" title="Connect directly to this contact on your local network">Connect devices</button>
+          <button class="icon-btn-modern" id="btn-verify-security" title="Verify 60-digit Security Code">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Modern Security Ribbon Banner -->
+      <div class="security-ribbon-banner" id="banner-e2ee" title="Tap to verify 60-digit security code">
+        <svg class="ribbon-shield-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <span class="ribbon-text-body">
+          Messages with <strong id="e2ee-contact-name">your contact</strong> use <strong>AES-256-GCM</strong>. Connect directly on the same local network, or exchange encrypted messages by SMS, QR, or copy and paste. Compare the shared-passkey security code in person.
+        </span>
+      </div>
+
+      <!-- Messages Timeline Scroll -->
+      <div class="messages-timeline-scroll" id="messages-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Inbound SMS Quick Decrypt Dock -->
+      <details class="inbound-decrypt-section">
+        <summary>Decrypt a message you received</summary>
+        <div class="inbound-decrypt-dock">
+        <input 
+          type="text" 
+          class="inbound-text-input" 
+          id="inbound-sms-input" 
+          placeholder="Paste the encrypted SMS or message here"
+          autocomplete="off"
+        >
+        <button class="btn-pill-modern btn-pill-highlight" id="btn-decrypt-inbound">DECRYPT</button>
+        <button class="btn-pill-modern" id="btn-paste-clipboard">PASTE</button>
+        </div>
+      </details>
+
+      <!-- Modern Floating Composer -->
+      <footer class="modern-composer-dock">
+        <button class="icon-btn-modern" id="btn-composer-qr" title="Show latest message as a QR code" aria-label="Show latest message as a QR code">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </button>
+
+        <div class="composer-pill-card">
+          <textarea 
+            class="composer-textarea" 
+            id="composer-input" 
+            placeholder="Write a message to encrypt..."
+            rows="1"
+          ></textarea>
+          <span class="composer-sms-counter" id="composer-char-badge">0 characters</span>
+        </div>
+
+        <button class="btn-pill-modern" id="btn-composer-send-sms" title="Encrypt and launch SMS app pre-filled with contact number">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <span>Send by SMS</span>
+        </button>
+
+        <button class="btn-composer-send-arrow" id="btn-composer-send" title="Encrypt and save on this device" aria-label="Encrypt and save message">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </footer>
+    </section>
+
+  </div>
+
+  <div class="modal-overlay-modern" id="modal-peer-connect">
+    <div class="modal-sheet-modern">
+      <div class="modal-sheet-header">
+        <h2>DIRECT DEVICE CONNECTION</h2>
+        <button class="icon-btn-modern btn-close-modal" aria-label="Close connection setup">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-scroll-content">
+        <p class="key-sharing-help" id="peer-connect-status">Both devices need this app open on the same local network. Exchange the connection code and use the same private passkey. No relay server is used.</p>
+        <div class="form-group-modern">
+          <label for="peer-signal-input">Connection code</label>
+          <textarea class="input-modern-pill" id="peer-signal-input" rows="7" spellcheck="false" placeholder="Create an invite or paste the code from your contact"></textarea>
+        </div>
+        <div class="peer-connect-actions">
+          <button class="btn-pill-modern" id="btn-peer-create-offer">Create invite</button>
+          <button class="btn-pill-modern" id="btn-peer-copy-code">Copy code</button>
+          <button class="btn-pill-modern btn-pill-highlight" id="btn-peer-apply-code">Apply code</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 1: 60-DIGIT SECURITY VERIFICATION SHEET
+       ======================================================================= -->
+  <div class="modal-overlay-modern" id="modal-security-code">
+    <div class="modal-sheet-modern">
+      <div class="modal-sheet-header">
+        <h2>VERIFY SECURITY CODE</h2>
+        <button class="icon-btn-modern btn-close-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-scroll-content">
+        <div class="security-qr-display-wrap">
+          <div class="qr-canvas-holder">
+            <canvas id="security-qr-canvas"></canvas>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; max-width: 440px;">
+            Compare this code with <strong id="verify-modal-name" style="color: var(--text-primary);">Contact</strong> (<span id="verify-modal-phone">+0 000 000</span>) in person. Matching codes confirm both of you entered the same shared secret.
+          </p>
+        </div>
+
+        <!-- 60 Digits Grid (12 Blocks of 5 Digits) -->
+        <div class="digits-60-grid-modern" id="security-digits-container">
+          <!-- Populated by app.js -->
+        </div>
+
+        <div class="form-group-modern">
+            <label>Shared secret for this contact</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" class="input-modern-pill" id="contact-secret-key-input" style="flex:1;">
+            <button class="btn-pill-modern btn-pill-highlight" id="btn-save-contact-key">APPLY KEY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 2: ADD NEW CONTACT (LINKED BY PHONE NUMBER)
+       ======================================================================= -->
+  <div class="modal-overlay-modern" id="modal-new-contact">
+    <div class="modal-sheet-modern">
+      <div class="modal-sheet-header">
+          <h2>START OR JOIN A CHAT</h2>
+        <button class="icon-btn-modern btn-close-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-scroll-content">
+        <div class="form-group-modern">
+          <label>Contact Full Name</label>
+          <input type="text" class="input-modern-pill" id="new-contact-name" placeholder="e.g. Elena Rostova" autocomplete="off">
+        </div>
+
+        <div class="form-group-modern">
+          <label>Mobile / Contact Phone Number (SMS Link)</label>
+          <input type="tel" class="input-modern-pill" id="new-contact-phone" placeholder="e.g. +1 (555) 019-4488" autocomplete="off">
+        </div>
+
+        <div class="form-group-modern">
+          <label>Shared passkey</label>
+          <input type="text" class="input-modern-pill" id="new-contact-key" autocomplete="off" aria-describedby="key-sharing-help">
+          <p class="key-sharing-help" id="key-sharing-help">A new key is generated for you. To join an existing chat, replace it with the exact passkey shared by your contact. Both people must use the same passkey. Keep it private and compare security codes in person.</p>
+          <button type="button" class="btn-pill-modern" id="btn-copy-contact-key">Copy passkey</button>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px;">
+          <button class="btn-pill-modern btn-close-modal">CANCEL</button>
+          <button class="btn-pill-modern btn-pill-highlight" id="btn-create-contact">Create chat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 3: AIR-GAP OFFLINE QR CODE DISPLAY
+       ======================================================================= -->
+  <div class="modal-overlay-modern" id="modal-airgap-qr">
+    <div class="modal-sheet-modern">
+      <div class="modal-sheet-header">
+        <h2>Share by QR code</h2>
+        <button class="icon-btn-modern btn-close-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-scroll-content">
+        <div class="security-qr-display-wrap">
+          <div class="qr-canvas-holder">
+            <canvas id="airgap-qr-canvas"></canvas>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);" id="airgap-meta-tag">Encrypted message</span>
+        </div>
+
+        <div class="form-group-modern">
+          <label>Encrypted message:</label>
+          <textarea class="input-modern-pill" id="airgap-armored-text" rows="3" readonly style="border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.72rem; resize: none;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button class="btn-pill-modern btn-pill-highlight" id="btn-copy-airgap-cipher">Copy encrypted message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Root -->
+  <div id="toast-root"></div>
+
+  <!-- Scripts -->
+  <script src="crypto-engine.js"></script>
+  <script src="qr-helper.js"></script>
+  <script src="audio-fx.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
